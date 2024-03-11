@@ -2,11 +2,11 @@ import { View} from "react-native";
 import {QuizList} from "../components/quiz-list";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {quizUrl} from "../urls";
+import {getQuizUrl} from "../urls";
 
 export default function QuizScreen() {
     const [data, setData] = useState([])
-    const quizUrl = quizUrl
+    const quizUrl = getQuizUrl();
 
     useEffect(() => {
         async function getAllQuizes() {
