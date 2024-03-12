@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import React, {useState, useEffect} from "react";
+import {View, Text, TextInput, Button, StyleSheet, Alert} from "react-native";
 import axios from "axios";
-import { getQuizUrl } from "../urls";
+import {getQuizUrl} from "../urls";
 
-const EditQuizScreen = ({ route, navigation }) => {
-    const { quizId, quizTitle } = route.params;
+const EditQuizScreen = ({route, navigation}) => {
+    const {quizId, quizTitle} = route.params;
     const quizUrl = getQuizUrl();
 
     // State for the edited quiz title
@@ -13,19 +13,30 @@ const EditQuizScreen = ({ route, navigation }) => {
     // Function to handle save button press
     const handleSave = async () => {
         try {
+            // Check if quizTitle is empty
+            if (!editedTitle.trim()) {
+                // Show an error message to the user
+                Alert.alert('Error', 'Quiz title cannot be empty.');
+                return;
+            }
+
             // Send a PATCH request to update the quiz title
-            await axios.patch(`${quizUrl}${quizId}/`, { title: editedTitle });
+            const response = await axios.patch(`${quizUrl}${quizId}/`, { title: editedTitle });
 
             // Log success message
-            console.log(`Successfully updated quiz ${quizId} with title: ${editedTitle}`);
+            console.log(`Successfully updated quiz ${quizId} with title: ${editedTitle}`, response.data);
 
             // Navigate back to QuizScreen or any other desired screen
             navigation.navigate("Quiz");
         } catch (error) {
-            // Handle error (e.g., show an error message)
+            // Log the error details
             console.error("Error updating quiz:", error);
+
+            // You can also show an alert with the error message
+            Alert.alert('Error', 'Failed to update quiz. Please try again.');
         }
     };
+
 
     // Function to handle cancel button press
     const handleCancel = () => {
@@ -45,8 +56,8 @@ const EditQuizScreen = ({ route, navigation }) => {
             />
             {/* Save and Cancel buttons */}
             <View style={styles.buttonContainer}>
-                <Button title="Save" onPress={handleSave} />
-                <Button title="Cancel" onPress={handleCancel} />
+                <Button title="Save" onPress={handleSave}/>
+                <Button title="Cancel" onPress={handleCancel}/>
             </View>
         </View>
     );

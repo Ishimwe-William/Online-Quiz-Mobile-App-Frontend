@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import {View, TextInput, Button, Text, StyleSheet, Alert} from 'react-native';
 import axios from 'axios';
 import { getQuizUrl } from '../urls';
 
@@ -8,15 +8,22 @@ const AddQuizScreen = ({ navigation }) => {
 
     const handleCreateQuiz = async () => {
         try {
+            // Check if quizTitle is empty
+            if (!quizTitle.trim()) {
+                // Show an error message to the user
+                Alert.alert('Error', 'Quiz title cannot be empty.');
+                return;
+            }
+
             // Send a request to create a new quiz
             await axios.post(getQuizUrl(), { title: quizTitle });
-            console.log(quizTitle)
+            console.log(quizTitle);
 
             // Navigate back to the QuizScreen
             navigation.goBack();
         } catch (error) {
             console.log(error);
-            // Handle error, show a message, etc.
+            // Handle other errors, show a message, etc.
         }
     };
 
@@ -26,17 +33,43 @@ const AddQuizScreen = ({ navigation }) => {
     };
 
     return (
-        <View>
-            {/* Add UI components for the quiz form */}
+        <View style={styles.container}>
+            <Text>Create Quiz</Text>
+            {/* TextInput for editing quiz title */}
             <TextInput
-                placeholder="Quiz Title"
+                style={styles.input}
+                placeholder="Enter new title"
                 value={quizTitle}
                 onChangeText={setQuizTitle}
             />
-            <Button title="Create Quiz" onPress={handleCreateQuiz} />
-            <Button title="Cancel" onPress={handleCancel} />
+            {/* Save and Cancel buttons */}
+            <View style={styles.buttonContainer}>
+                <Button title="Create" onPress={handleCreateQuiz} />
+                <Button title="Cancel" onPress={handleCancel} />
+            </View>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        marginVertical: 20,
+        width: 250,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: 200,
+    },
+});
 
 export default AddQuizScreen;
