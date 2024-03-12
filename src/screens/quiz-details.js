@@ -1,12 +1,18 @@
-import {Text, FlatList, View, ActivityIndicator, RefreshControl} from "react-native";
+import { Text, FlatList, View, ActivityIndicator, RefreshControl } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {getQuizQuestionsUrl} from "../urls";
+import { getQuizQuestionsUrl } from "../urls";
 
 export default function QuizDetailsScreen() {
     const route = useRoute();
-    const { quiz_id, title } = route.params;
+    const { quiz_id, title, created_at, updated_at } = route.params;
+
+    // Function to format the date (e.g., "MM/DD/YYYY HH:mm:ss")
+    const formatDateTime = (dateTimeString) => {
+        const options = { year: "numeric", month: "long", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" };
+        return new Date(dateTimeString).toLocaleString("en-US", options);
+    };
 
     const renderItem = ({ item }) => {
         return <Text>{item.text}</Text>;
@@ -51,7 +57,6 @@ export default function QuizDetailsScreen() {
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Text style={{ fontSize: 20 }}>{title}!</Text>
-
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
@@ -67,6 +72,7 @@ export default function QuizDetailsScreen() {
                     />
                 </View>
             )}
+            <Text style={{ fontSize: 10 }}>Updated: {formatDateTime(updated_at)}!</Text>
         </View>
     );
 }
