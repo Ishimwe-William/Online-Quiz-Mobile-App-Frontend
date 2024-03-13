@@ -23,7 +23,14 @@ const AddQuizScreen = ({ navigation }) => {
             navigation.goBack();
         } catch (error) {
             console.log(error);
-            // Handle other errors, show a message, etc.
+            if (error.response && error.response.status === 401) {
+                Alert.alert("🚫 Not Authorized", "Please Login!");
+
+            } else {
+                // Handle other types of errors
+                console.error('An error occurred:', error);
+                Alert.alert('Error', 'Failed to create quiz. Please try again later.');
+            }
         }
     };
 
