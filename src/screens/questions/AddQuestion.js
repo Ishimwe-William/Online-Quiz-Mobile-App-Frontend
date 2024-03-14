@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { getQuizQuestionsUrl } from "../../urls";
-import { useRoute } from '@react-navigation/native'; // Import the useRoute hook
+import { useRoute } from '@react-navigation/native';
+import {HeaderBackButton} from "@react-navigation/elements"; // Import the useRoute hook
 
 const AddQuestion = ({ navigation }) => {
     const [questionText, setQuestionText] = useState('');
     const route = useRoute(); // Use the useRoute hook to access the route's params
     const { quizId, quizTitle } = route.params;
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Add Question",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
     const handleAddQuestion = async () => {
         try {

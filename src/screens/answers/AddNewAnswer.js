@@ -1,12 +1,27 @@
-import React, {useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {View, TextInput, Button, StyleSheet, Alert} from 'react-native';
 import axios from 'axios';
 import {setQuestionAnswersUrl} from "../../urls";
 import {CheckBox} from 'react-native-elements';
+import {HeaderBackButton} from "@react-navigation/elements";
 
 const AddNewAnswer = ({navigation, route}) => {
     const {questionId, quizId} = route.params;
     const [answers, setAnswers] = useState([{text: '', isCorrect: false}]);
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Add Answer",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
     const handleAddAnswer = async () => {
         try {

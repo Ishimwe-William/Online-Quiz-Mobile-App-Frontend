@@ -1,14 +1,28 @@
-import React, {useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {editAnswersUrl, getQuizUrl, setQuestionAnswersUrl} from "../../urls";
-import axios from "axios"; // You can use any icon library you prefer
+import axios from "axios";
+import {HeaderBackButton} from "@react-navigation/elements"; // You can use any icon library you prefer
 
 const EditAnswerScreen = ({route, navigation}) => {
     // Extract the answer details from the route params
     const {answer, question, quizId} = route.params;
     console.log(question, quizId)
 
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Edit Answer",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
     // State variables to hold the edited answer details
     const [editedText, setEditedText] = useState(answer.text);

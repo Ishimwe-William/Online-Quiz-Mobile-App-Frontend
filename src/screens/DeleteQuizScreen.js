@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, {useLayoutEffect, useState} from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import axios from "axios";
 import {getQuizUrl} from "../urls";
+import {HeaderBackButton} from "@react-navigation/elements";
 
 const EditQuizScreen = ({ route, navigation }) => {
     const { quizId,quizTitle } = route.params;
     let quizUrl = getQuizUrl();
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Delete Quiz",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
     // Function to handle save button press
     const handleConfirm = async () => {
@@ -29,7 +44,7 @@ const EditQuizScreen = ({ route, navigation }) => {
     // Function to handle cancel button press
     const handleCancel = () => {
         // Navigate back to QuizScreen without saving changes
-        navigation.navigate("Quiz");
+        navigation.goBack();
     };
 
     return (

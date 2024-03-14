@@ -9,13 +9,16 @@ import AddQuestion from "./screens/questions/AddQuestion";
 import AddAnswer from "./screens/answers/AddAnswer";
 import AddNewAnswer from "./screens/answers/AddNewAnswer";
 import EditAnswerScreen from "./screens/answers/ViewAnswerScreen";
+import {useNavigation} from "@react-navigation/native";
+import {navOptions} from "./options";
 
 const Stack = createStackNavigator();
 
 export const QuizStack = ()=> {
+    const navigation = useNavigation();
     return (
-        <Stack.Navigator>
-            <Stack.Screen name="Quiz" component={QuizScreen} />
+        <Stack.Navigator screenOptions={()=>navOptions(navigation)}>
+            <Stack.Screen name="Quiz-Stack" component={QuizScreen}  />
             <Stack.Screen name="Quiz-Details" component={QuizDetailsScreen} />
             <Stack.Screen name="AddQuiz" component={AddQuizScreen} />
             <Stack.Screen name="EditQuiz" component={EditQuizScreen} />

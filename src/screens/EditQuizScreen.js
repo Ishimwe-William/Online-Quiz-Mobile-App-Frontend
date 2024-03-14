@@ -1,11 +1,26 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useLayoutEffect} from "react";
 import {View, Text, TextInput, Button, StyleSheet, Alert} from "react-native";
 import axios from "axios";
 import {getQuizUrl} from "../urls";
+import {HeaderBackButton} from "@react-navigation/elements";
 
 const EditQuizScreen = ({route, navigation}) => {
     const {quizId, quizTitle} = route.params;
     const quizUrl = getQuizUrl();
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Edit Quiz",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
     // State for the edited quiz title
     const [editedTitle, setEditedTitle] = useState(quizTitle);

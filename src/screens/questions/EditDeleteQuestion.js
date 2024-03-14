@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 import axios from 'axios';
 import { setQuestionAnswersUrl } from "../../urls";
@@ -6,6 +6,7 @@ import { useRoute } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import ActionButton from 'react-native-action-button';
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+import {HeaderBackButton} from "@react-navigation/elements";
 
 const EditDeleteQuestion = ({ navigation }) => {
     const route = useRoute();
@@ -14,6 +15,20 @@ const EditDeleteQuestion = ({ navigation }) => {
     const [fetchingAnswers, setFetchingAnswers] = useState(true);
     const answersUrl = setQuestionAnswersUrl(quizId, question.id)
     const isFocused = useIsFocused(); // Hook to check if the screen is currently focused
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Quiz Questions",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
 
     const formatDateTime = (dateTimeString) => {

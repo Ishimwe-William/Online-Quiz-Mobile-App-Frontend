@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
     View, Text, StyleSheet, FlatList, TouchableOpacity,
     ActivityIndicator, RefreshControl, ScrollView, Alert
@@ -8,10 +8,25 @@ import {getQuizQuestionsUrl} from "../urls";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useRoute} from "@react-navigation/native";
+import {HeaderBackButton} from "@react-navigation/elements";
 
 export default function QuizDetailsScreen({navigation}) {
     const route = useRoute();
     const {quiz_id, title, updated_at} = route.params;
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Quiz Details",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
     const formatDateTime = (dateTimeString) => {
         const options = {
