@@ -1,27 +1,12 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, TextInput, Button, StyleSheet, Alert} from 'react-native';
 import axios from 'axios';
 import {setQuestionAnswersUrl} from "../../urls";
 import {CheckBox} from 'react-native-elements';
-import {HeaderBackButton} from "@react-navigation/elements";
 
 const AddAnswer = ({navigation, route}) => {
-    const {questionId, quizId, quizTitle} = route.params;
+    const {questionId, quizId} = route.params;
     const [answers, setAnswers] = useState([{text: '', isCorrect: false}, {text: '', isCorrect: false}]);
-
-    useLayoutEffect(()=>{
-        navigation.setOptions({
-            headerTitle: "Add Answers",
-            headerLeft: ()=>(
-                <HeaderBackButton
-                    tintColor={"black"}
-                    onPress={()=>{
-                        navigation.goBack()
-                    }}
-                />
-            )
-        })
-    })
 
     const handleAddAnswer = async () => {
         try {
@@ -40,7 +25,7 @@ const AddAnswer = ({navigation, route}) => {
             ));
             console.log('New answers added successfully!');
 
-            navigation.navigate("Quiz-Details", {quiz_id: quizId, title: quizTitle});
+            navigation.navigate("Quiz-Details",{ quiz_id:"",title:"", updated_at:""});
         } catch (error) {
             console.error('Error adding answers:', error);
         }
@@ -99,8 +84,8 @@ const AddAnswer = ({navigation, route}) => {
                 </View>
             ))}
             <View style={styles.buttonContainer}>
-                <Button title="Save" onPress={handleAddAnswer}/>
-                <Button title="Add Answer Field" onPress={handleAddAnotherAnswer}/>
+                <Button title="Add Answer" onPress={handleAddAnswer}/>
+                <Button title="Add Another Answer" onPress={handleAddAnotherAnswer}/>
                 <Button title="Cancel" onPress={handleCancel}/>
             </View>
         </View>

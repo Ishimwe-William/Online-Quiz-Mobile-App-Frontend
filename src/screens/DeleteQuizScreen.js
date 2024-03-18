@@ -33,7 +33,7 @@ const EditQuizScreen = ({ route, navigation }) => {
             console.log(`Successfully deleted quiz ${quizId} with title: ${quizTitle}`);
 
             // Navigate back to QuizScreen or any other desired screen
-            navigation.navigate("Quiz");
+            navigation.navigate("Quiz-Stack");
         } catch (error) {
             // Handle error (e.g., show an error message)
             console.error("Error deleting quiz:", error);

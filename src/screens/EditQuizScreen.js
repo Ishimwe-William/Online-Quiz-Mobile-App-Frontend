@@ -42,7 +42,7 @@ const EditQuizScreen = ({route, navigation}) => {
             console.log(`Successfully updated quiz ${quizId} with title: ${editedTitle}`, response.data);
 
             // Navigate back to QuizScreen or any other desired screen
-            navigation.navigate("Quiz");
+            navigation.navigate("Quiz-Stack");
         } catch (error) {
             // Log the error details
             console.error("Error updating quiz:", error);
@@ -56,7 +56,7 @@ const EditQuizScreen = ({route, navigation}) => {
     // Function to handle cancel button press
     const handleCancel = () => {
         // Navigate back to QuizScreen without saving changes
-        navigation.navigate("Quiz");
+        navigation.navigate("Quiz-Stack");
     };
 
     return (
