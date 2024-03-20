@@ -3,8 +3,8 @@ import QuizDetailsScreen from "./screens/quiz-details";
 import {createStackNavigator} from "@react-navigation/stack";
 import {useNavigation} from "@react-navigation/native";
 import {navOptions} from "./options";
-import {LoginScreen} from "./screens/auth/login";
 import HomeScreen from "./screens/auth/home";
+import {LoginScreen} from "./screens/auth/login";
 
 const Stack = createStackNavigator();
 
