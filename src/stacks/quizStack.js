@@ -1,16 +1,16 @@
-import QuizScreen from "./screens/quizScreen";
-import QuizDetailsScreen from "./screens/quiz-details";
+import QuizScreen from "../screens/quiz/quizScreen";
+import QuizDetailsScreen from "../screens/quiz/quiz-details";
 import {createStackNavigator} from "@react-navigation/stack";
-import AddQuizScreen from "./screens/AddQuizScreen";
-import EditQuizScreen from "./screens/EditQuizScreen";
-import DeleteQuizScreen from "./screens/DeleteQuizScreen";
-import EditDeleteQuestion from "./screens/questions/EditDeleteQuestion";
-import AddQuestion from "./screens/questions/AddQuestion";
-import AddAnswer from "./screens/answers/AddAnswer";
-import AddNewAnswer from "./screens/answers/AddNewAnswer";
-import EditAnswerScreen from "./screens/answers/ViewAnswerScreen";
+import AddQuizScreen from "../screens/quiz/AddQuizScreen";
+import EditQuizScreen from "../screens/quiz/EditQuizScreen";
+import DeleteQuizScreen from "../screens/quiz/DeleteQuizScreen";
+import EditDeleteQuestion from "../screens/questions/EditDeleteQuestion";
+import AddQuestion from "../screens/questions/AddQuestion";
+import AddAnswer from "../screens/answers/AddAnswer";
+import AddNewAnswer from "../screens/answers/AddNewAnswer";
+import EditAnswerScreen from "../screens/answers/ViewAnswerScreen";
 import {useNavigation} from "@react-navigation/native";
-import {navOptions} from "./options";
+import {navOptions} from "../utils/options";
 
 const Stack = createStackNavigator();
 
