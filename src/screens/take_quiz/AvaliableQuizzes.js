@@ -48,20 +48,10 @@ export default function AvailableQuizzes() {
         }
     }, [isFocused, getAllQuizzes]);
 
-    const handleAddQuiz = () => {
-        navigation.navigate('AddQuiz');
-        console.log('Add new quiz');
-    };
 
-    const handleEditQuiz = (quiz) => {
-        // Navigate to EditQuizScreen with the selected quiz's ID
-        navigation.navigate("EditQuiz", {quizId: quiz.id, quizTitle: quiz.title});
-    };
-
-    const handleDeleteQuiz = async (quiz) => {
-        // Navigate to DeleteQuizScreen with the selected quiz's ID
-        navigation.navigate("DeleteQuiz", {quizId: quiz.id, quizTitle: quiz.title});
-    };
+    function handleTakeQuiz() {
+        console.log('takeQuiz')
+    }
 
     return (
         <View style={styles.container}>
@@ -71,14 +61,12 @@ export default function AvailableQuizzes() {
                 <View style={styles.container}>
                     <QuizList
                         data={data}
-                        onEdit={handleEditQuiz}
-                        onDelete={handleDeleteQuiz}
                         refreshing={refreshing}
                         onRefresh={handleRefresh}
                     />
                     <ActionButton
                         buttonColor="#007bff"
-                        onPress={handleAddQuiz}
+                        onPress={handleTakeQuiz}
                         offsetY={20}
                         offsetX={20}
                         renderIcon={() => <Icon name="add" style={styles.actionButtonIcon}/>}
