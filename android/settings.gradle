@@ -1,4 +1,4 @@
-rootProject.name = 'onlinequiz'
+rootProject.name = 'online-quiz'
 
 dependencyResolutionManagement {
   versionCatalogs {

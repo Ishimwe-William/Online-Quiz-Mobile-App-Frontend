@@ -1,18 +1,17 @@
 import React from 'react';
-import {NavigationContainer} from "@react-navigation/native";
-import {QuizStack} from "./src/stack";
+import { StatusBar } from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
+import {useAuthentication} from "./src/screens/auth/hooks/useAuthentication";
 import Drawers from "./src/drawer";
-import {StatusBar} from "expo-status-bar";
-import {ThemeProvider} from "react-native-elements";
-import RootNavigation from "./src/screens/auth";
+import AuthStack from "./src/stacks/authStack";
 
 export default function App() {
-  return (
-      <NavigationContainer>
-        {/*<Drawers/>*/}
-          <RootNavigation/>
-          <StatusBar style={'dark'}/>
-      </NavigationContainer>
+    const { userLoggedIn } = useAuthentication();
 
-  );
+    return (
+        <NavigationContainer>
+            {userLoggedIn ? <Drawers /> : <AuthStack />}
+            <StatusBar style="dark" />
+        </NavigationContainer>
+    );
 }

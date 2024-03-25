@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {useLayoutEffect} from 'react';
 import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import { Button } from 'react-native-elements';
-import { StackScreenProps } from '@react-navigation/stack';
-import { useNavigation } from "@react-navigation/native";
+import {HeaderBackButton} from "@react-navigation/elements";
 
-const WelcomeScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
+const WelcomeScreen =({ navigation }) => {
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Welcome",
+            headerLeft: ()=>(null)
+        })
+    })
 
     return (
         <View style={styles.container}>

@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {View, TextInput, Button, Text, StyleSheet, Alert} from 'react-native';
 import axios from 'axios';
-import { getQuizUrl } from '../urls';
+import { getQuizUrl } from '../../urls';
 import {HeaderBackButton} from "@react-navigation/elements";
 
 const AddQuizScreen = ({ navigation }) => {

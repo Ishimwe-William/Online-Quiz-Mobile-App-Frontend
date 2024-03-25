@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Alert } from 'react-native';
-import { Button } from 'react-native-elements';
-import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import React, {useLayoutEffect, useState} from 'react';
+import {
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    ScrollView,
+    Alert
+} from 'react-native';
+import {Button} from 'react-native-elements';
+import {signInWithEmailAndPassword, getAuth} from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { loginUrl } from "../../urls";
+import {loginUrl} from "../../urls";
+import {HeaderBackButton} from "@react-navigation/elements";
 
 const auth = getAuth();
 
-const SignInScreen = ({ navigation }) => {
+const SignInScreen = ({navigation}) => {
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Sign In",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
 
     const [value, setValue] = useState({
         email: '',
@@ -44,25 +67,14 @@ const SignInScreen = ({ navigation }) => {
 
                 // Save authentication token to AsyncStorage
                 await AsyncStorage.setItem('authToken', idToken);
-                console.log('Authentication token stored in AsyncStorage:', idToken);
+                // console.log('Authentication token stored in AsyncStorage:', idToken);
 
                 // Save user data to AsyncStorage
                 await AsyncStorage.setItem('userData', JSON.stringify(userData));
-                console.log('User data stored in AsyncStorage:', userData);
+                // console.log('User data stored in AsyncStorage:', userData);
 
-                // Redirect to appropriate screen based on user role
-                if (userData.is_superuser) {
-                    navigation.navigate("Home");
-                    console.log('admin');
-                } else {
-                    navigation.navigate("Home");
-                    console.log('normal');
-                }
             } else {
-                // Server is unavailable, redirect to home screen and display message
-                // navigation.navigate('Home');
-                console.log('normal');
-                Alert.alert('Error',"Server unavailable")
+                Alert.alert('Error', "Server unavailable")
             }
         } catch (error) {
             setValue({
@@ -83,7 +95,7 @@ const SignInScreen = ({ navigation }) => {
                     style={styles.input}
                     placeholder='Email'
                     value={value.email}
-                    onChangeText={(text) => setValue({ ...value, email: text })}
+                    onChangeText={(text) => setValue({...value, email: text})}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -93,7 +105,7 @@ const SignInScreen = ({ navigation }) => {
                     style={styles.input}
                     placeholder='Password'
                     value={value.password}
-                    onChangeText={(text) => setValue({ ...value, password: text })}
+                    onChangeText={(text) => setValue({...value, password: text})}
                     secureTextEntry={true}
                 />
 

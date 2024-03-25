@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from "../../../../config/firebaseweb.config";
+import { auth } from "../../../config/firebaseweb.config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = React.createContext();

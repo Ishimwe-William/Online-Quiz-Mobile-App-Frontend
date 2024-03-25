@@ -7,5 +7,7 @@
       "**/*"
     ]
   },
-  "name": "online-quiz"
+  "plugins": [
+    "expo-auth-session"
+  ]
 }

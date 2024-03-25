@@ -10,8 +10,7 @@ export default {
       "**/*"
     ],
     "android": {
-      "googleServicesFile": "./android/app/google-services.json",
-      "package": "com.bunsenwill.onlinequiz"
+      "package": "com.bunsenwill.onlinequizapp"
     },
     // "plugins": [
     //   "@react-native-google-signin/google-signin"

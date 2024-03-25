@@ -1,4 +1,4 @@
-package com.bunsenwill.onlinequiz
+package com.bunsenwill.onlinequizapp
 
 import android.app.Application
 import android.content.res.Configuration

@@ -4,7 +4,7 @@ import {
     ActivityIndicator, RefreshControl, ScrollView, Alert
 } from 'react-native';
 import axios from 'axios';
-import {getQuizQuestionsUrl} from "../urls";
+import {getQuizQuestionsUrl} from "../../urls";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useRoute} from "@react-navigation/native";

@@ -22,3 +22,12 @@ export const navOptions = (nav) => {
         )
     }
 }
+
+export const authOptions = (nav) => {
+    return {
+        headerTintColor: 'darkblue',
+        headerStyle: {
+            backgroundColor: 'lightgray'
+        },
+    }
+}

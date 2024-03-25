@@ -1,17 +1,32 @@
-import React, { useState } from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { StackScreenProps } from '@react-navigation/stack';
 import { authentication } from "../../config/firebaseweb.config";
-import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { registerUrl } from "../../urls";
+import {HeaderBackButton} from "@react-navigation/elements";
 
 // Initialize Firebase auth
 const auth = getAuth(authentication);
 
-const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
+const SignUpScreen= ({ navigation }) => {
+
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Sign Up",
+            headerLeft: ()=>(
+                <HeaderBackButton
+                    tintColor={"black"}
+                    onPress={()=>{
+                        navigation.goBack()
+                    }}
+                />
+            )
+        })
+    })
+
     const [value, setValue] = useState({
         email: '',
         password: '',

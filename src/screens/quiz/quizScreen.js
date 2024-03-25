@@ -1,11 +1,11 @@
 import React, {useEffect, useState, useCallback, useLayoutEffect} from "react";
 import {View, StyleSheet, Text, FlatList, RefreshControl, ActivityIndicator} from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import {QuizList} from "../components/quiz-list";
+import {QuizList} from "../../components/quiz-list";
 import ActionButton from 'react-native-action-button';
 import {useNavigation, useIsFocused} from "@react-navigation/native";
 import axios from "axios";
-import {getQuizUrl} from "../urls";
+import {getQuizUrl} from "../../urls";
 
 export default function QuizScreen() {
     const [data, setData] = useState([]);

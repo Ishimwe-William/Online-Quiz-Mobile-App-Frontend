@@ -1,55 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useAuthentication } from './utils/hooks/useAuthentication';
-import { Button } from 'react-native-elements';
-import { getAuth, signOut } from "firebase/auth";
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import {StyleSheet, Text, View, ActivityIndicator, Alert} from 'react-native';
+import { Button, Avatar } from 'react-native-elements';
+import { signOut } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {authentication} from "../../config/firebaseweb.config";
+import { auth } from "../../config/firebaseweb.config";
+import { useUserData } from "./hooks/useUserData";
+import {HeaderBackButton} from "@react-navigation/elements";
 
 export default function HomeScreen({ navigation }) {
-    const { user } = useAuthentication();
-    const auth = getAuth(authentication);
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
+    const { userData, loading } = useUserData();
 
-    useEffect(() => {
-        const getUserData = async () => {
-            try {
-                const userDataString = await AsyncStorage.getItem('userData');
-                if (userDataString !== null) {
-                    const userData = JSON.parse(userDataString);
-                    setFirstname(userData.firstname);
-                    setLastname(userData.lastname);
-                }
-            } catch (error) {
-                console.error('Error retrieving user data:', error);
-            }
-        };
-
-        getUserData();
-    }, []); // Empty dependency array ensures this effect runs only once when the component mounts
-
+    useLayoutEffect(()=>{
+        navigation.setOptions({
+            headerTitle: "Home",
+            headerLeft: ()=>null
+        })
+    })
 
     const handleSignOut = async () => {
         try {
-            // Clear AsyncStorage
             await AsyncStorage.removeItem('userData');
             await AsyncStorage.removeItem('authToken');
-
-            // Sign out
             await signOut(auth);
-
-            // Navigate to Welcome screen
-            navigation.navigate('Welcome');
         } catch (error) {
+            Alert.alert('Sign out error')
             console.error("Sign out error:", error);
         }
     };
 
+    const getUserInitials = (firstname, lastname) => {
+        const firstInitial = firstname ? firstname.charAt(0).toUpperCase() : '';
+        const lastInitial = lastname ? lastname.charAt(0).toUpperCase() : '';
+        return `${firstInitial}${lastInitial}` || ''; // Return an empty string if both initials are empty
+    };
+
     return (
         <View style={styles.container}>
-            <Text>Welcome, {lastname} {firstname}</Text>
-            <Button title="Sign Out" style={styles.button} onPress={handleSignOut} />
+            {loading ? (
+                <ActivityIndicator size="large" color="#007bff" />
+            ) : (
+                <View style={styles.content}>
+                    {userData ? (
+                        <>
+                            <View style={styles.userInfoContainer}>
+                                <Avatar
+                                    rounded
+                                    size={100}
+                                    title={getUserInitials(userData.firstname, userData.lastname)}
+                                    containerStyle={[styles.avatarContainer, { backgroundColor: 'purple' }]}
+                                    titleStyle={{ color: 'white' }}
+                                />
+
+                                <Text style={styles.welcomeText}>Welcome, {userData.lastname} {userData.firstname}</Text>
+                                <Text style={styles.userDetails}>{userData.username}</Text>
+                                <Text style={styles.userDetails}>{userData.email}</Text>
+                                <Text style={styles.userType}>Type: {userData.is_superuser ? 'Admin' : 'Normal'}</Text>
+                            </View>
+                            <Button
+                                title="Sign Out"
+                                buttonStyle={styles.signOutButton}
+                                onPress={handleSignOut}
+                            />
+                        </>
+                    ) : (
+                        <Text>No user data available</Text>
+                    )}
+                </View>
+            )}
         </View>
     );
 }
@@ -61,7 +78,45 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    button: {
-        marginTop: 10
-    }
+    content: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+    },
+    userInfoContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    welcomeText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    userDetails: {
+        fontSize: 16,
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    userType: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 20,
+        textAlign: 'center',
+    },
+    signOutButton: {
+        marginTop: 30,
+        backgroundColor: '#007bff',
+        paddingHorizontal: 40,
+        paddingVertical: 15,
+        borderRadius: 10,
+    },
+    avatarContainer: {
+        marginBottom: 20, // Add margin to separate Avatar from other elements
+    },
+    initialsStyle: {
+        backgroundColor: 'purple',
+        color: 'white'
+    },
 });
