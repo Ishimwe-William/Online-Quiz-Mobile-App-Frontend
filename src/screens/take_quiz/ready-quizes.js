@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, FlatList, RefreshControl, TouchableOpacity, TextInput } from "react-native";
 import { QuizDescription } from "./SingleQuiz";
+import {useNavigation} from "@react-navigation/native";
 
-export const ReadyQuizzes = ({ data, refreshing, onRefresh, onSelectQuiz }) => {
+export const ReadyQuizzes = ({ data, refreshing, onRefresh }) => {
     const [searchText, setSearchText] = useState('');
+    const navigation = useNavigation();
+
+    const handleTakeQuiz = (quiz) => {
+        navigation.navigate('TakeQuizPage', { quiz: quiz });
+    };
 
     const filteredData = data.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()));
+
+
 
     const renderItem = ({ item }) => {
         return (
             <View style={styles.card}>
                 <QuizDescription id={item.id} title={item.title} created_at={item.created_at} updated_at={item.updated_at} />
-                <TouchableOpacity style={styles.selectButton} onPress={() => onSelectQuiz(item)}>
+                <TouchableOpacity style={styles.selectButton} onPress={() => handleTakeQuiz(item)}>
                     <Text style={styles.selectButtonText}>Take Quiz</Text>
                 </TouchableOpacity>
             </View>
