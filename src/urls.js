@@ -6,3 +6,4 @@ export const editAnswersUrl = (quizId, questionId,optionId) => `${BASE_URL}${qui
 export const getQuizUrl = () => `${BASE_URL}`;
 export const registerUrl = () => `${BASE_URL}users/register/`;
 export const loginUrl = () => `${BASE_URL}users/login/`;
+export const saveQuizResultUrl = () => `${BASE_URL}quiz-results/save/`;

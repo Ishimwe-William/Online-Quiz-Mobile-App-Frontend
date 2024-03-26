@@ -2,16 +2,19 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Button, Text, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
-import { getQuizQuestionsUrl, setQuestionAnswersUrl } from "../../urls";
+import { getQuizQuestionsUrl, saveQuizResultUrl, setQuestionAnswersUrl } from "../../urls";
 import { HeaderBackButton } from "@react-navigation/elements";
 import { Alert } from 'react-native';
+import { useUserData } from "../auth/hooks/useUserData";
 
 const TakeQuizPage = ({ navigation }) => {
     const route = useRoute();
+    const { userData, loading } = useUserData();
     const { quiz } = route.params; // Assuming you pass quiz as a parameter
     const [questions, setQuestions] = useState(null);
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [totalPoints, setTotalPoints] = useState(0);
+    const [totalQuizMarks, setTotalQuizMarks] = useState(0); // Total quiz marks
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -48,6 +51,10 @@ const TakeQuizPage = ({ navigation }) => {
                     })
                 );
 
+                // Calculate total quiz marks
+                const totalMarks = questionsWithOptions.reduce((total, question) => total + question.point_value, 0);
+                setTotalQuizMarks(totalMarks);
+
                 setQuestions(questionsWithOptions);
             } catch (error) {
                 console.error('Error fetching quiz data:', error);
@@ -57,8 +64,7 @@ const TakeQuizPage = ({ navigation }) => {
         fetchQuestionData();
     }, [quiz.id]);
 
-    const handleAnswerSelection = (questionId, answerId, pointValue) => {
-        console.log(pointValue)
+    const handleAnswerSelection = (questionId, answerId) => {
         setSelectedAnswers(prevSelectedAnswers => {
             const isAnswerSelected = prevSelectedAnswers[questionId] === answerId;
             const newSelectedAnswers = { ...prevSelectedAnswers };
@@ -89,6 +95,7 @@ const TakeQuizPage = ({ navigation }) => {
                     if (selectedOption && selectedOption.is_correct) {
                         // Add the point value of the question to the total points if the selected option is correct
                         totalPoints += question.point_value;
+                        setTotalPoints(totalPoints)
                     }
                 }
             }
@@ -106,13 +113,20 @@ const TakeQuizPage = ({ navigation }) => {
                         text: "Submit",
                         onPress: async () => {
                             try {
+                                console.log(selectedAnswers)
                                 // Send data to backend endpoint
-                                await axios.post(`http://127.0.0.1:8000/api/${quiz.id}/take-quiz/`, {
-                                    selectedAnswers,
-                                    totalPoints
+                                await axios.post(saveQuizResultUrl(), {
+                                    user: userData.id, // Send user ID instead of user object
+                                    quiz: quiz.id, // Send quiz ID instead of quiz object
+                                    selected_answers: selectedAnswers, // Change the key to snake_case
+                                    score: totalPoints,
+                                    total_marks: totalQuizMarks, // Pass total quiz marks
                                 });
+
+                                navigation.navigate('AfterSubmissionPage', { totalPoints, totalQuizMarks }); // Pass both score and total marks
                                 // Show success message or navigate to another screen
                             } catch (error) {
+                                Alert.alert("Error","Error Submitting Data!")
                                 console.error('Error submitting quiz:', error);
                             }
                         }

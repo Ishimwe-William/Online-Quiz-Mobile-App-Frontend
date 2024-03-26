@@ -1,25 +1,35 @@
 import React, {useLayoutEffect, useState} from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Alert } from 'react-native';
-import { Button } from 'react-native-elements';
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { StackScreenProps } from '@react-navigation/stack';
-import { authentication } from "../../config/firebaseweb.config";
+import {
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    ScrollView,
+    Alert
+} from 'react-native';
+import {Button} from 'react-native-elements';
+import {createUserWithEmailAndPassword, getAuth} from "firebase/auth";
+import {StackScreenProps} from '@react-navigation/stack';
+import {authentication} from "../../config/firebaseweb.config";
 import axios from 'axios';
-import { registerUrl } from "../../urls";
+import {loginUrl, registerUrl} from "../../urls";
 import {HeaderBackButton} from "@react-navigation/elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Initialize Firebase auth
 const auth = getAuth(authentication);
 
-const SignUpScreen= ({ navigation }) => {
+const SignUpScreen = ({navigation}) => {
 
-    useLayoutEffect(()=>{
+    useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: "Sign Up",
-            headerLeft: ()=>(
+            headerLeft: () => (
                 <HeaderBackButton
                     tintColor={"black"}
-                    onPress={()=>{
+                    onPress={() => {
                         navigation.goBack()
                     }}
                 />
@@ -65,8 +75,30 @@ const SignUpScreen= ({ navigation }) => {
             // Only create user in Firebase if server request was successful
             try {
                 // Create user with email and password
-                await createUserWithEmailAndPassword(auth, value.email, value.password);
+                const userCredential = await createUserWithEmailAndPassword(auth, value.email, value.password);
+                const idToken = await userCredential.user.getIdToken(); // Get ID token from Firebase
                 // Navigate to sign-in screen after successful sign-up
+
+                // Send the ID token to the server to authenticate
+                const response = await axios.post(loginUrl(), {
+                    idToken: idToken,
+                });
+
+                // Check if the server is available and handle response accordingly
+                if (response.status === 200) {
+                    const userData = response.data;
+
+                    // Save authentication token to AsyncStorage
+                    await AsyncStorage.setItem('authToken', idToken);
+                    // console.log('Authentication token stored in AsyncStorage:', idToken);
+
+                    // Save user data to AsyncStorage
+                    await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                    // console.log('User data stored in AsyncStorage:', userData);
+
+                } else {
+                    Alert.alert('Error', "Server unavailable")
+                }
                 navigation.navigate("SignIn");
                 // Show success message
                 console.log('Sign-up successful.');
@@ -154,7 +186,7 @@ const SignUpScreen= ({ navigation }) => {
                     style={styles.input}
                     placeholder='Email'
                     value={value.email}
-                    onChangeText={(text) => setValue({ ...value, email: text })}
+                    onChangeText={(text) => setValue({...value, email: text})}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -163,7 +195,7 @@ const SignUpScreen= ({ navigation }) => {
                     style={styles.input}
                     placeholder='First Name'
                     value={value.firstname}
-                    onChangeText={(text) => setValue({ ...value, firstname: text })}
+                    onChangeText={(text) => setValue({...value, firstname: text})}
                     autoCapitalize="words"
                     autoCorrect={false}
                 />
@@ -171,7 +203,7 @@ const SignUpScreen= ({ navigation }) => {
                     style={styles.input}
                     placeholder='Last Name'
                     value={value.lastname}
-                    onChangeText={(text) => setValue({ ...value, lastname: text })}
+                    onChangeText={(text) => setValue({...value, lastname: text})}
                     autoCapitalize="words"
                     autoCorrect={false}
                 />
@@ -179,7 +211,7 @@ const SignUpScreen= ({ navigation }) => {
                     style={styles.input}
                     placeholder='Username'
                     value={value.username}
-                    onChangeText={(text) => setValue({ ...value, username: text })}
+                    onChangeText={(text) => setValue({...value, username: text})}
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
@@ -188,7 +220,7 @@ const SignUpScreen= ({ navigation }) => {
                     style={styles.input}
                     placeholder='Password'
                     value={value.password}
-                    onChangeText={(text) => setValue({ ...value, password: text })}
+                    onChangeText={(text) => setValue({...value, password: text})}
                     secureTextEntry={true}
                 />
 

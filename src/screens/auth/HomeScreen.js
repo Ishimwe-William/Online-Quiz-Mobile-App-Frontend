@@ -85,15 +85,15 @@ export default function HomeScreen({ navigation }) {
                                 <Text style={styles.userDetails}>{userData.email}</Text>
                                 <Text style={styles.userType}>Type: {userData.is_superuser ? 'Admin' : 'Normal'}</Text>
                             </View>
-                            <Button
-                                title="Sign Out"
-                                buttonStyle={styles.signOutButton}
-                                onPress={handleSignOut}
-                            />
                         </>
                     ) : (
-                        <Text>No user data available</Text>
+                        <Text>Loading...</Text>
                     )}
+                    <Button
+                        title="Sign Out"
+                        buttonStyle={styles.signOutButton}
+                        onPress={handleSignOut}
+                    />
                 </View>
             )}
         </ScrollView>
