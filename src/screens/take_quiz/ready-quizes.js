@@ -1,47 +1,53 @@
-import React from "react";
-import { View, StyleSheet, Text, FlatList, RefreshControl, TouchableOpacity, Animated, Easing } from "react-native";
-import { QuizItem } from "../../components/quiz-item";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, FlatList, RefreshControl, TouchableOpacity, TextInput } from "react-native";
+import { QuizDescription } from "./SingleQuiz";
 
 export const ReadyQuizzes = ({ data, refreshing, onRefresh, onSelectQuiz }) => {
-    const renderItem = ({ item, index }) => {
-        // Animation for quiz items
-        const scale = new Animated.Value(0);
-        Animated.timing(scale, {
-            toValue: 1,
-            duration: 500,
-            delay: index * 100,
-            easing: Easing.ease,
-            useNativeDriver: true,
-        }).start();
+    const [searchText, setSearchText] = useState('');
 
+    const filteredData = data.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()));
+
+    const renderItem = ({ item }) => {
         return (
-            <Animated.View style={[styles.card, { transform: [{ scale }] }]}>
-                <QuizItem id={item.id} title={item.title} created_at={item.created_at} updated_at={item.updated_at} />
+            <View style={styles.card}>
+                <QuizDescription id={item.id} title={item.title} created_at={item.created_at} updated_at={item.updated_at} />
                 <TouchableOpacity style={styles.selectButton} onPress={() => onSelectQuiz(item)}>
                     <Text style={styles.selectButtonText}>Take Quiz</Text>
                 </TouchableOpacity>
-            </Animated.View>
+            </View>
         );
     };
 
     return (
-        <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    colors={['#007bff']}
-                />
-            }
-            contentContainerStyle={{ paddingBottom: 20 }}
-        />
+        <View style={styles.container}>
+            <TextInput
+                style={styles.searchInput}
+                placeholder="Search quizzes..."
+                value={searchText}
+                onChangeText={text => setSearchText(text)}
+            />
+            <FlatList
+                data={filteredData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={['#007bff']}
+                    />
+                }
+                contentContainerStyle={{ paddingBottom: 20 }}
+            />
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+    },
     card: {
         borderWidth: 1,
         borderColor: "#ddd",
@@ -62,5 +68,12 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         fontSize: 15,
+    },
+    searchInput: {
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        padding: 10,
+        margin: 10,
     },
 });

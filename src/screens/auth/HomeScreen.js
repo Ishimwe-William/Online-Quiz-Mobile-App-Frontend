@@ -5,7 +5,6 @@ import { signOut } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from "../../config/firebaseweb.config";
 import { useUserData } from "./hooks/useUserData";
-import { HeaderBackButton } from "@react-navigation/elements";
 import MapView, { Marker } from 'react-native-maps';
 
 export default function HomeScreen({ navigation }) {
