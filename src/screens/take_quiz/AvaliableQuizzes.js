@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useCallback, useLayoutEffect } from "react";
-import { View, StyleSheet, Text, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+    View,
+    StyleSheet,
+    Text,
+    FlatList,
+    RefreshControl,
+    ActivityIndicator,
+    TouchableOpacity,
+    Alert
+} from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import axios from "axios";
 import { getQuizUrl } from "../../urls";
@@ -26,6 +35,7 @@ export default function AvailableQuizzes() {
             const response = await axios.get(quizUrl);
             setData(response.data);
         } catch (error) {
+            Alert.alert("Error","Error fetching quizzes! Server may be down.")
             console.error("Error fetching quizzes:", error);
             // Handle error: Display an error message or retry option
         } finally {

@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://1e92-102-22-146-194.ngrok-free.app/api/';
+export const BASE_URL = ' https://ee39-102-22-146-194.ngrok-free.app/api/';
 
 export const getQuizQuestionsUrl = (quizId) => `${BASE_URL}${quizId}/questions/`;
 export const setQuestionAnswersUrl = (quizId, questionId) => `${BASE_URL}${quizId}/questions/${questionId}/options/`;

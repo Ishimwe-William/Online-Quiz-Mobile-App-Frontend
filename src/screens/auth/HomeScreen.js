@@ -1,19 +1,33 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {StyleSheet, Text, View, ActivityIndicator, Alert} from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { StyleSheet, Text, View, ActivityIndicator, Alert, Dimensions, ScrollView } from 'react-native';
 import { Button, Avatar } from 'react-native-elements';
 import { signOut } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from "../../config/firebaseweb.config";
 import { useUserData } from "./hooks/useUserData";
-import {HeaderBackButton} from "@react-navigation/elements";
+import { HeaderBackButton } from "@react-navigation/elements";
+import MapView, { Marker } from 'react-native-maps';
 
 export default function HomeScreen({ navigation }) {
     const { userData, loading } = useUserData();
+    const [coordinates, setCoordinates] = useState(null);
+    const [mapDimensions, setMapDimensions] = useState({
+        width: Dimensions.get('window').width,
+        height: 300, // Set the desired map height
+    });
 
-    useLayoutEffect(()=>{
+    useEffect(() => {
+        // Set "my home" coordinates
+        setCoordinates({
+            latitude: -1.962751,
+            longitude: 30.047578,
+        });
+    }, []);
+
+    useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: "Home",
-            headerLeft: ()=>null
+            headerLeft: () => null
         })
     })
 
@@ -35,7 +49,7 @@ export default function HomeScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             {loading ? (
                 <ActivityIndicator size="large" color="#007bff" />
             ) : (
@@ -43,6 +57,22 @@ export default function HomeScreen({ navigation }) {
                     {userData ? (
                         <>
                             <View style={styles.userInfoContainer}>
+                                {coordinates && (
+                                    <MapView
+                                        style={mapDimensions}
+                                        initialRegion={{
+                                            latitude: coordinates.latitude,
+                                            longitude: coordinates.longitude,
+                                            latitudeDelta: 0.0922,
+                                            longitudeDelta: 0.0421,
+                                        }}
+                                    >
+                                        <Marker
+                                            coordinate={coordinates}
+                                            title="My Home"
+                                        />
+                                    </MapView>
+                                )}
                                 <Avatar
                                     rounded
                                     size={100}
@@ -67,19 +97,18 @@ export default function HomeScreen({ navigation }) {
                     )}
                 </View>
             )}
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1, // Use flexGrow instead of flex to allow ScrollView to work properly
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
     content: {
-        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 20,
@@ -110,10 +139,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#007bff',
         paddingHorizontal: 40,
         paddingVertical: 15,
+        marginBottom: 20,
         borderRadius: 10,
     },
     avatarContainer: {
-        marginBottom: 20, // Add margin to separate Avatar from other elements
+        marginTop: 10,
+        marginBottom: 10, // Add margin to separate Avatar from other elements
     },
     initialsStyle: {
         backgroundColor: 'purple',
